@@ -126,7 +126,7 @@ def save_model(clf, model_dir: str = "models", model_name: str = "model.pkl") ->
 def main() -> None:
     try:
         params = load_params("params.yaml")
-        train_data = load_data("./data/processed/train_bow.csv")
+        train_data = load_data("./data/processed/train_tfidf.csv")
         X_train, y_train = separate_xy(train_data)
 
         clf = model_fit(X_train, y_train, params)

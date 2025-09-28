@@ -108,7 +108,7 @@ def main() -> None:
 
         # Paths expected by dvc.yaml
         model_path = os.path.join("models", "model.pkl")
-        test_path  = os.path.join("data", "processed", "test_bow.csv")
+        test_path  = os.path.join("data", "processed", "test_tfidf.csv")
 
         # Load artifacts
         clf = load_model(model_path)

@@ -4,7 +4,7 @@ import yaml
 import numpy as np
 import pandas as pd
 from typing import Tuple
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 import logging
 
 logger = logging.getLogger('data_ingestion')
@@ -113,14 +113,14 @@ def get_test_content(test_data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         raise RuntimeError(f"Failed to extract test content: {e}") from e
 
 
-def vectorize_bow(
+def vectorize_tfidf(
     X_train: np.ndarray,
     X_test: np.ndarray,
     max_features: int | None = None,
-) -> Tuple[np.ndarray, np.ndarray, CountVectorizer]:
-    """Fit CountVectorizer on train and transform test."""
+) -> Tuple[np.ndarray, np.ndarray, TfidfVectorizer]:
+    """Fit TfidfVectorizer on train and transform test."""
     try:
-        vect = CountVectorizer(max_features=max_features)
+        vect = TfidfVectorizer(max_features=max_features)
         X_train_bow = vect.fit_transform(X_train)
         X_test_bow = vect.transform(X_test)
         return X_train_bow, X_test_bow, vect
@@ -157,8 +157,8 @@ def save_data(train_df: pd.DataFrame, test_df: pd.DataFrame, data_path: str) -> 
     """Persist train/test feature CSVs."""
     try:
         os.makedirs(data_path, exist_ok=True)
-        train_fp = os.path.join(data_path, "train_bow.csv")
-        test_fp = os.path.join(data_path, "test_bow.csv")
+        train_fp = os.path.join(data_path, "train_tfidf.csv")
+        test_fp = os.path.join(data_path, "test_tfidf.csv")
         train_df.to_csv(train_fp, index=False)
         test_df.to_csv(test_fp, index=False)
     except Exception as e:
@@ -179,7 +179,7 @@ def main() -> None:
         X_train, y_train = get_train_content(train_data)
         X_test, y_test = get_test_content(test_data)
 
-        X_train_bow, X_test_bow, _ = vectorize_bow(
+        X_train_bow, X_test_bow, _ = vectorize_tfidf(
             X_train, X_test, max_features=max_features
         )
 
